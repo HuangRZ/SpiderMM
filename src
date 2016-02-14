@@ -5,25 +5,30 @@ import urllib2
 import os
 
 class Spider:
-    
+    #the url of taobaomm
     def __init__(self):
         self.siteurl='http://mm.taobao.com/json/request_top_list.htm'
-        
+    #which uses to get the whole html text   
     def getPage(self,page):
         url=self.siteurl+'?page='+str(page)
         request=urllib2.Request(url)
         response=urllib2.urlopen(request)
+        #return the info of the whole html text
         return response.read().decode('gbk')
+    #use to get the list of the info of the taobaomm
     def getContexts(self,pageIndex):
         html=self.getPage(pageIndex)
         pattern = re.compile('<div class="list-item".*?pic-word.*?<a href="(.*?)".*?<img src="(.*?)".*?<a class="lady-name.*?>(.*?)</a>.*?<strong>(.*?)</strong>.*?<span>(.*?)</span>',re.S)
+        #return the list
         context=re.findall(pattern, html)
         x=0
         for item in context:
+            
             print item[0],item[1],item[2],item[3],item[4]
             imgurl='https:'+item[1]
             print imgurl
             filename=item[2]+'.jpg'
+            #download the pic of taobaomm
             urllib.urlretrieve(imgurl,filename)
             x+=1
             
